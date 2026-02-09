@@ -2,37 +2,33 @@ const express = require("express");
 
 const app = express();
 
-app.get(/^\/a(b)?c$/, (req, res) => {
-    res.send({firstName : "Akhil", lastName : "Golagani"});
-});
-
-app.get("/user", (req, res) => {
-    console.log(req.query);
-    res.send({firstName: "Akhil", lastName : "Golagani"})
-});
-
-app.get("/user/:userId/:name/:password", (req, res) => {
-    console.log(req.query);
-    console.log(req.params);
-    res.send({firstName: "Akhil", lastName : "Golagani"})
-});
-
-
-app.get("/user", (req, res) => {
-    res.send({firstName: "Akhil", lastName : "Golagani"})
-});
-
-app.post("/user", (req, res) => {
-    res.send("User created successfully");
-});
-
-app.delete("/user", (req, res) => {
-    res.send("User deleted successfully");
-})
-
-app.use("/test",(req,res)=>{
-    res.send("Hello to the server 9966");
-});
+app.use("/user", 
+[
+(req, res, next) => {
+    //Route handler
+    console.log("Handling the 1st Route");
+    //res.send("Response from 1st Route");
+    next();
+},
+(req, res, next) => {
+    console.log("Handling the 2nd Route");
+    //res.send("Response from 2nd Route");
+    next();
+},
+(req, res, next) => {
+    console.log("Handling the 3rd Route");
+    //res.send("Response from 3rd Route");
+    next();
+},
+(req, res, next) => {
+    console.log("Handling the 4th Route");
+    //res.send("Response from 4th Route");
+    next();
+},
+(req, res, next) => {
+    console.log("Handling the 5th Route");
+    res.send("Response from 5th Route");
+}]);
 
 app.listen(9966, () => {
     console.log("Server is listening to 9966");
