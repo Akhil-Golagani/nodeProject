@@ -1,27 +1,38 @@
 const express = require("express");
-
+const {connectDB} = require("./config/database");
 const {adminAuth, userAuth} = require("./middlewares/auth");
-
+const User = require("./models/user");
 const app = express();
 
-app.use("/admin", adminAuth);
+app.post("/signup", async(req, res) => {
+    const user = new User({
+        firstName : "Chaitanya",
+        lastName : "Kakarlapudi",
+        emailId : "chaitanyakakarlapudi@gmail.com",
+        password : "Chaitu@123"
+    });
 
-app.get("/user/getUser", userAuth, (req, res) => {
-    res.send("User data fetched");
+    try{
+        await user.save();
+        res.send("User added successfully");
+    }
+    catch (err){
+        res.status(400).send("Error saving the user :" + err.message);
+    }
+    
 });
 
-app.get("/user/login", (req, res) => {
-    res.send("User logged successfully");
+// app.get("/getAllUsers", (req, res) => {
+//     res.send("User details fetched successfully");
+// });
+
+connectDB().then(()=>{
+    console.log("Succesfully connected to database");
+    app.listen(9966, () => {
+        console.log("Server is listening to 9966");
+    });
+}).
+catch((err)=>{
+    console.log(err);
 });
 
-app.get("/admin/getAllData", (req, res) => {
-    res.send("All data sent successfully");
-});
-
-app.delete("/admin/deleteData", (req, res) => {
-    res.send("Data deleted successfully");
-});
-
-app.listen(9966, () => {
-    console.log("Server is listening to 9966");
-});
