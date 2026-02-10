@@ -4,27 +4,17 @@ const {adminAuth, userAuth} = require("./middlewares/auth");
 const User = require("./models/user");
 const app = express();
 
-app.post("/signup", async(req, res) => {
-    const user = new User({
-        firstName : "Chaitanya",
-        lastName : "Kakarlapudi",
-        emailId : "chaitanyakakarlapudi@gmail.com",
-        password : "Chaitu@123"
-    });
+app.use(express.json());
 
-    try{
+app.post("/signup", async(req, res) => {
+    const user = new User(req.body);
+    try {
         await user.save();
         res.send("User added successfully");
-    }
-    catch (err){
+    } catch (err) {
         res.status(400).send("Error saving the user :" + err.message);
     }
-    
 });
-
-// app.get("/getAllUsers", (req, res) => {
-//     res.send("User details fetched successfully");
-// });
 
 connectDB().then(()=>{
     console.log("Succesfully connected to database");
