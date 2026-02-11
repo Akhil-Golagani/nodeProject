@@ -70,10 +70,26 @@ app.delete("/deleteUser", async(req,res) => {
     }
 });
 
-app.put("/updateUserData", async(req, res) => {
+app.put("/updateUser", async(req, res) => {
     try {
         const res = await User.findOne({firstName:"Rohit1"}).updateOne({lastName:"Sharma"});
         if(res.acknowledged === false){
+            res.send("No user found");
+        }
+        else{
+            res.send("Data Successfully Updated");
+        }
+    } catch (err) {
+        res.status(400).send("Something went wrong");
+    }
+});
+
+app.patch("/updateUserData", async(req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    try {
+        const user = await User.findByIdAndUpdate(userId, data);
+        if(!user){
             res.send("No user found");
         }
         else{
