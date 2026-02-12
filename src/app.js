@@ -86,8 +86,25 @@ app.put("/updateUser", async(req, res) => {
 
 app.patch("/updateUserData", async(req, res) => {
     const userId = req.body.userId;
+    console.log(userId)
     const data = req.body;
+    console.log(data)
+
     try {
+        const UPDATE_ALLOWED = ["photoUrl","about","age","skills","gender"];
+        const inValidKeys = Object.keys(data).filter(
+            (k) => !UPDATE_ALLOWED.includes(k)
+        );
+        console.log(inValidKeys);
+
+        if(inValidKeys.length > 0){
+            throw new Error("Update not allowed. Invalid fields : "+inValidKeys.join(","));
+        }
+
+        if(data.skills && data.skills.length > 4){
+            throw new Error("Skills can't be more than 4");
+        }
+
         const user = await User.findByIdAndUpdate(userId, data);
         if(!user){
             res.send("No user found");
@@ -96,7 +113,7 @@ app.patch("/updateUserData", async(req, res) => {
             res.send("Data Successfully Updated");
         }
     } catch (err) {
-        res.status(400).send("Something went wrong");
+        res.status(400).send("UPDATE FAILED : "+err.message);
     }
 });
 
